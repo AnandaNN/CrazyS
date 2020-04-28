@@ -1,0 +1,21 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/ananda/ROS/crazyflie_31390_ws/src/CrazyS/**",
+                "/opt/ros/melodic/include/**",
+                "/home/ananda/ROS/crazyflie_31390_ws/src/mav_comm/**",
+                "/usr/include/eigen3",
+                "/home/ananda/ROS/crazyflie_31390_ws/devel/include/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
