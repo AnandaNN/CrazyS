@@ -66,6 +66,11 @@ void CrazyflieOnboardController::SetControllerGains(PositionControllerParameters
       ROS_DEBUG("Rate gains - Kp_phi: %f, Ki_phi: %f, Kp_theta: %f, Ki_theta: %f, Kp_psi: %f, Ki_psi: %f", rate_gain_kp_private_.x(),
                  rate_gain_ki_private_.x(), rate_gain_kp_private_.y(), rate_gain_ki_private_.y(), rate_gain_kp_private_.z(),
                  rate_gain_ki_private_.z());
+      ROS_INFO("Attitude gains - Kp_p: %f, Ki_p: %f, Kp_q: %f, Ki_q: %f", attitude_gain_kp_private_.x(),
+                 attitude_gain_ki_private_.x(), attitude_gain_kp_private_.y(), attitude_gain_ki_private_.y());
+      ROS_INFO("Rate gains - Kp_phi: %f, Ki_phi: %f, Kp_theta: %f, Ki_theta: %f, Kp_psi: %f, Ki_psi: %f", rate_gain_kp_private_.x(),
+                 rate_gain_ki_private_.x(), rate_gain_kp_private_.y(), rate_gain_ki_private_.y(), rate_gain_kp_private_.z(),
+                 rate_gain_ki_private_.z());
 
 }
 
@@ -75,9 +80,12 @@ void CrazyflieOnboardController::RateController(double* delta_phi, double* delta
     assert(delta_psi);
 
     double p, q, r;
-    p = state_t_private_.angularVelocity.x;
-    q = state_t_private_.angularVelocity.y;
-    r = state_t_private_.angularVelocity.z;
+    // p = state_t_private_.angularVelocity.x;
+    // q = state_t_private_.angularVelocity.y;
+    // r = state_t_private_.angularVelocity.z;
+    p = true_ang_x;
+    q = true_ang_y;
+    r = true_ang_z;
 
     double r_command;
     r_command = control_t_private_.yawRate;
@@ -96,6 +104,7 @@ void CrazyflieOnboardController::RateController(double* delta_phi, double* delta
     r_error = r_command - r;
 
     ROS_DEBUG("p_command: %f, q_command: %f", p_command_, q_command_);
+    // ROS_INFO("p_command: %f, q_command: %f", p_command_, q_command_);
 
     double delta_phi_kp, delta_theta_kp, delta_psi_kp;
     delta_phi_kp = rate_gain_kp_private_.x() * p_error;
@@ -108,6 +117,11 @@ void CrazyflieOnboardController::RateController(double* delta_phi, double* delta
     delta_psi_ki_ = delta_psi_ki_ + (rate_gain_ki_private_.z() * r_error * SAMPLING_TIME_RATE_CONTROLLER);
     *delta_psi = delta_psi_kp + delta_psi_ki_;
 
+    // ROS_INFO("phi: %f theta: %f psi: %f",*delta_phi, *delta_theta, *delta_psi);
+
+    // ROS_INFO("p_error: %f, q_error: %f", p_error, q_error);
+    // ROS_INFO("p = %f, q = %f", q, p);
+
 }
 
 // The attitude controller runs with a frequency rate of 250Hz
@@ -116,7 +130,12 @@ void CrazyflieOnboardController::AttitudeController(double* p_command_internal, 
     assert(q_command_internal);
 
     double roll, pitch, yaw;
-    Quaternion2Euler(&roll, &pitch, &yaw);
+    // Quaternion2Euler(&roll, &pitch, &yaw);
+    roll = true_r;
+    pitch = true_p;
+    yaw = true_y;
+
+    // ROS_INFO("Roll: %f Pitch: %f Yaw: %f", roll*180/M_PI, pitch*180/M_PI, yaw*180/M_PI);
 
     double theta_command, phi_command;
     theta_command = control_t_private_.pitch;
@@ -139,6 +158,8 @@ void CrazyflieOnboardController::AttitudeController(double* p_command_internal, 
 
     ROS_DEBUG("Phi_c: %f, Phi_e: %f, Theta_c: %f, Theta_e: %f", phi_command, phi_error, theta_command, theta_error);
     ROS_DEBUG("p_command: %f, q_command: %f", *p_command_internal, *q_command_internal);
+    // ROS_INFO("p_command: %f, q_command: %f", *p_command_internal, *q_command_internal);
+    // ROS_INFO("Roll error: %f, Pitch error: %f", phi_error, theta_error );
 
 }
 

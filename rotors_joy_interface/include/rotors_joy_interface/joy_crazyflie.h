@@ -28,8 +28,11 @@ struct Axes {
   int pitch;
   int thrust;
   int yaw_rate;
+  int yaw_rate_left;
+  int yaw_rate_right;
   int roll_direction;
   int pitch_direction;
+  int yaw_direction;
 };
 
 struct Buttons {

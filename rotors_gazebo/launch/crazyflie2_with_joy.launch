@@ -51,8 +51,15 @@
         <remap from="odometry" to="odometry_sensor1/odometry" />
     </node>
     <!-- The following lines start the real-time graphics on the Crazyflie's position and orientation -->
-    <node name="position_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg mav_name)/odometry_sensor1/odometry/pose/pose/position" output="screen" />
-    <node name="orientation_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg mav_name)/orientation_rpy" output="screen" />
+    
+    <node name="position_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg mav_name)/odometry_sensor1/odometry/pose/pose/position /$(arg mav_name)/command/roll_pitch_yawrate_thrust/pitch" output="screen" />
+    
+    <!--
+    <node name="orientation_plot" pkg="rqt_plot" type="rqt_plot" args="- -clear-config /$(arg mav_name)/orientation_rpy" output="screen" />
+    -->
+    <!--
+    <node name="pitch_command" pkg="rqt_plot" type="rqt_plot" args="- -clear-config /$(arg mav_name)/command/roll_pitch_yawrate_thrust" output="screen" />
+    -->
   </group>
 
 </launch>

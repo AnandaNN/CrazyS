@@ -7,7 +7,7 @@
   <arg name="log_file" default="$(arg mav_name)" />
   <arg name="paused" value="true"/>
   <arg name="debug" default="false"/>
-  <arg name="gui" default="true"/>
+  <arg name="gui" default="false"/>
   <arg name="csvFilesStoring" default="false"/>
   <arg name="csvFilesStoringTime" default="15.0"/> <!-- seconds -->
   <arg name="user_account" default="giuseppe"/>
@@ -53,6 +53,9 @@
    <node name="quaternion_to_rpy" pkg="rotors_gazebo" type="quaternion_to_rpy" output="screen" >
        <remap from="odometry" to="odometry_sensor1/odometry" />
    </node>
+
+    <node name="position_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg mav_name)/odometry_sensor1/odometry/pose/pose/position" output="screen" />
+    <node name="attitude_plot" pkg="rqt_plot" type="rqt_plot" args="--clear-config /$(arg mav_name)/orientation_rpy" output="screen" />
 
   </group>
 </launch>

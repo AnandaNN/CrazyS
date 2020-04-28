@@ -37,9 +37,9 @@ Joy::Joy() {
   control_msg_.thrust.z = 0;
   current_yaw_vel_ = 0;
 
-  pnh.param("axis_roll_", axes_.roll, 0);
-  pnh.param("axis_pitch_", axes_.pitch, 1);
-  pnh.param("axis_thrust_", axes_.thrust, 2);
+  pnh.param("axis_roll_", axes_.roll, 3); // 0
+  pnh.param("axis_pitch_", axes_.pitch, 4); // 1
+  pnh.param("axis_thrust_", axes_.thrust, 1); // 2
 
   pnh.param("axis_direction_roll", axes_.roll_direction, -1);
   pnh.param("axis_direction_pitch", axes_.pitch_direction, 1);

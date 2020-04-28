@@ -102,7 +102,9 @@ void RollPitchYawrateThrustControllerCrazyflie::CalculateRotorVelocities(Eigen::
       else
          omega_4 = 0;
 
+
   ROS_DEBUG("Omega_1: %f Omega_2: %f Omega_3: %f Omega_4: %f", omega_1, omega_2, omega_3, omega_4);
+  // ROS_INFO("Omega_1: %f Omega_2: %f Omega_3: %f Omega_4: %f", omega_1, omega_2, omega_3, omega_4);
   *rotor_velocities = Eigen::Vector4d(omega_1, omega_2, omega_3, omega_4);
 
 }
@@ -125,6 +127,8 @@ void RollPitchYawrateThrustControllerCrazyflie::ControlMixer(double* PWM_1, doub
 
     ROS_DEBUG("Omega: %f, Delta_theta: %f, Delta_phi: %f, delta_psi: %f", roll_pitch_yawrate_thrust_.thrust, delta_theta, delta_phi, delta_psi);
     ROS_DEBUG("PWM1: %f, PWM2: %f, PWM3: %f, PWM4: %f", *PWM_1, *PWM_2, *PWM_3, *PWM_4);
+    // ROS_INFO("PWM1: %f, PWM2: %f, PWM3: %f, PWM4: %f", *PWM_1, *PWM_2, *PWM_3, *PWM_4);
+    // ROS_INFO("Omega: %f, Delta_theta: %f, Delta_phi: %f, delta_psi: %f", roll_pitch_yawrate_thrust_.thrust, delta_theta, delta_phi, delta_psi);
 
 }
 
@@ -149,6 +153,8 @@ void RollPitchYawrateThrustControllerCrazyflie::RateController(double* delta_phi
     p_error = p_command - p;
     q_error = q_command - q;
     r_error = r_command - r;
+
+    // ROS_INFO("p_error: %f, q_error: %f", p_error, q_error);
 
     double delta_phi_kp, delta_theta_kp, delta_psi_kp;
     delta_phi_kp = rate_gain_kp_.x() * p_error;
@@ -188,6 +194,8 @@ void RollPitchYawrateThrustControllerCrazyflie::AttitudeController(double* p_com
     *q_command = q_command_kp + q_command_ki_;
 
     ROS_INFO("Phi_c: %f, Phi_e: %f, Theta_c: %f, Theta_e: %f", phi_command, phi_error, theta_command, theta_error);
+    // ROS_INFO("P_cmd: %f, Q_cmd: %f", *p_command, *q_command);
+    // ROS_INFO("ITS IS RUNNING");
 
 }
 

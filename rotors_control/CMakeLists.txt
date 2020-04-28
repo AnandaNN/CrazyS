@@ -7,6 +7,7 @@ find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   mav_msgs
   nav_msgs
+  std_msgs
   roscpp
   sensor_msgs
   cmake_modules
@@ -19,8 +20,8 @@ find_package(
 catkin_package(
   INCLUDE_DIRS include ${Eigen_INCLUDE_DIRS}
   LIBRARIES lee_position_controller position_controller crazyflie_onboard_controller roll_pitch_yawrate_thrust_controller sensfusion6 crazyflie_complementary_filter
-  roll_pitch_yawrate_thrust_crazyflie
-  CATKIN_DEPENDS geometry_msgs mav_msgs nav_msgs roscpp sensor_msgs
+  roll_pitch_yawrate_thrust_crazyflie crazyflie_onboard_controller_v2
+  CATKIN_DEPENDS geometry_msgs mav_msgs nav_msgs roscpp sensor_msgs std_msgs
   DEPENDS Eigen
 )
 
@@ -43,6 +44,22 @@ add_library(crazyflie_onboard_controller
    src/library/crazyflie_onboard_controller.cpp
 )
 
+add_library(crazyflie_onboard_controller_v2
+   src/library/crazyflie_onboard_controller_v2.cpp
+)
+
+add_library(pid
+   src/library/pid.cpp
+)
+
+add_library(num
+   src/library/num.cpp
+)
+
+add_library(filter
+   src/library/filter.cpp
+)
+
 add_library(roll_pitch_yawrate_thrust_controller
   src/library/roll_pitch_yawrate_thrust_controller.cpp
 )
@@ -57,6 +74,14 @@ add_library(crazyflie_complementary_filter
 
 add_library(sensfusion6
   src/library/sensfusion6.cpp
+)
+
+add_library(crazyflie_rpy_controller
+  src/library/crazyflie_rpy_controller.cpp
+)
+
+add_library(crazyflie_rpy_controller_v2
+  src/library/crazyflie_rpy_controller_v2.cpp
 )
 
 target_link_libraries(lee_position_controller ${catkin_LIBRARIES})
@@ -80,6 +105,13 @@ add_dependencies(crazyflie_complementary_filter ${catkin_EXPORTED_TARGETS})
 target_link_libraries(sensfusion6 ${catkin_LIBRARIES})
 add_dependencies(sensfusion6 ${catkin_EXPORTED_TARGETS})
 
+target_link_libraries(crazyflie_rpy_controller ${catkin_LIBRARIES})
+add_dependencies(crazyflie_rpy_controller ${catkin_EXPORTED_TARGETS})
+
+target_link_libraries(crazyflie_rpy_controller_v2 ${catkin_LIBRARIES})
+add_dependencies(crazyflie_rpy_controller_v2 ${catkin_EXPORTED_TARGETS})
+
+
 add_executable(lee_position_controller_node src/nodes/lee_position_controller_node.cpp)
 add_dependencies(lee_position_controller_node ${catkin_EXPORTED_TARGETS})
 target_link_libraries(lee_position_controller_node
@@ -102,14 +134,26 @@ add_dependencies(roll_pitch_yawrate_thrust_crazyflie_node ${catkin_EXPORTED_TARG
 target_link_libraries(roll_pitch_yawrate_thrust_crazyflie_node
 roll_pitch_yawrate_thrust_crazyflie ${catkin_LIBRARIES})
 
+add_executable(crazyflie_rpy_controller_node
+  src/nodes/crazyflie_rpy_controller_node.cpp)
+add_dependencies(crazyflie_rpy_controller_node ${catkin_EXPORTED_TARGETS})
+target_link_libraries(crazyflie_rpy_controller_node
+crazyflie_rpy_controller crazyflie_complementary_filter crazyflie_onboard_controller sensfusion6 ${catkin_LIBRARIES})
+
+add_executable(crazyflie_rpy_controller_node_v2
+  src/nodes/crazyflie_rpy_controller_node_v2.cpp)
+add_dependencies(crazyflie_rpy_controller_node_v2 ${catkin_EXPORTED_TARGETS})
+target_link_libraries(crazyflie_rpy_controller_node_v2
+crazyflie_rpy_controller_v2 crazyflie_complementary_filter crazyflie_onboard_controller_v2 sensfusion6 pid num filter ${catkin_LIBRARIES})
+
 
 install(TARGETS lee_position_controller position_controller crazyflie_onboard_controller roll_pitch_yawrate_thrust_controller
-  roll_pitch_yawrate_thrust_crazyflie
+  roll_pitch_yawrate_thrust_crazyflie crazyflie_rpy_controller crazyflie_rpy_controller_v2
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 )
 
 install(TARGETS lee_position_controller_node position_controller_node roll_pitch_yawrate_thrust_controller_node
-  roll_pitch_yawrate_thrust_crazyflie_node
+  roll_pitch_yawrate_thrust_crazyflie_node crazyflie_rpy_controller_node crazyflie_rpy_controller_node_v2
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

@@ -19,7 +19,7 @@
 
 #include <mav_msgs/default_topics.h>
 
-#define MAX_THRUST 8162.0 // propeller angular velocities [PWM]
+#define MAX_THRUST 8162.0 // 8162 propeller angular velocities [PWM]
 #define MAX_ROLL 30.0 * M_PI / 180.0 // [rad]
 #define MAX_PITCH 30.0 * M_PI / 180.0 // [rad]
 #define MAX_YAWRATE 200.0 * M_PI / 180.0 // [rad/s]
@@ -36,13 +36,16 @@ Joy::Joy() {
   control_msg_.thrust = 0;
   current_yaw_vel_ = 0;
 
-  pnh.param("axis_roll_", axes_.roll, 0);
-  pnh.param("axis_pitch_", axes_.pitch, 1);
-  pnh.param("axis_thrust_", axes_.thrust, 3);
-  pnh.param("axis_yaw_rate_", axes_.yaw_rate, 2);
+  pnh.param("axis_roll_", axes_.roll, 3); // 0
+  pnh.param("axis_pitch_", axes_.pitch, 4); // 1
+  pnh.param("axis_thrust_", axes_.thrust, 1); // 3
+  // pnh.param("axis_yaw_rate_", axes_.yaw_rate, 0); // 2
+  pnh.param("axis_yaw_rate_", axes_.yaw_rate_left, 2); // 2
+  pnh.param("axis_yaw_rate_", axes_.yaw_rate_right, 5); // 2
 
   pnh.param("axis_direction_roll", axes_.roll_direction, -1);
   pnh.param("axis_direction_pitch", axes_.pitch_direction, 1);
+  pnh.param("axis_direction_yaw", axes_.yaw_direction, 1);
 
   pnh.param("max_roll", max_.roll, MAX_ROLL);
   pnh.param("max_pitch", max_.pitch, MAX_PITCH);
@@ -70,23 +73,40 @@ void Joy::JoyCallback(const sensor_msgs::JoyConstPtr& msg) {
 
   //Set pitch and roll
   control_msg_.roll = msg->axes[axes_.roll] * max_.roll * axes_.roll_direction;
+  // control_msg_.roll = 0;
   control_msg_.pitch = msg->axes[axes_.pitch] * max_.pitch * axes_.pitch_direction;
 
   //Set yaw rate
-  if (msg->axes[axes_.yaw_rate] > 0) {
-    current_yaw_vel_ = max_.rate_yaw;
+  
+  if( msg->axes[axes_.yaw_rate_left] < 0.99 ) {
+    control_msg_.yaw_rate = (1 - msg->axes[axes_.yaw_rate_left])/2.0 * max_.rate_yaw;
   }
-  else if (msg->axes[axes_.yaw_rate] < 0) {
-    current_yaw_vel_ = -max_.rate_yaw;
+  else if( msg->axes[axes_.yaw_rate_right] < 0.99 ){
+    control_msg_.yaw_rate = -(1 - msg->axes[axes_.yaw_rate_right])/2.0 * max_.rate_yaw;
   }
-  else {
-    current_yaw_vel_ = 0;
+  else
+  {
+    control_msg_.yaw_rate = 0;
   }
-  control_msg_.yaw_rate = current_yaw_vel_;
+  
+
+  // control_msg_.yaw_rate = max_.rate_yaw * msg->axes[axes_.yaw_rate] * axes_.yaw_direction;
+  // control_msg_.yaw_rate = 0;
+  // if (msg->axes[axes_.yaw_rate] > 0) {
+    // current_yaw_vel_ = max_.rate_yaw;
+  // }
+  // else if (msg->axes[axes_.yaw_rate] < 0) {
+    // current_yaw_vel_ = -max_.rate_yaw;
+  // }
+  // else {
+    // current_yaw_vel_ = 0;
+  // }
+  // control_msg_.yaw_rate = current_yaw_vel_;
 
   //Set thrust
   if(msg->axes[axes_.thrust] > 0)
-    control_msg_.thrust = max_.thrust;
+    control_msg_.thrust = max_.thrust * msg->axes[axes_.thrust];
+    // control_msg_.thrust = max_.thrust;
   else
     control_msg_.thrust = 0;
 

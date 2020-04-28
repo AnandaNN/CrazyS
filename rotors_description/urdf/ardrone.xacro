@@ -20,7 +20,8 @@
   <xacro:property name="max_rot_velocity" value="838" /> <!-- [rad/s] -->
   <xacro:property name="sin30" value="0.5" />
   <xacro:property name="cos30" value="0.866025403784" />
-  <xacro:property name="sqrt2" value="1.4142135623730951" />
+  <!-- <xacro:property name="sqrt2" value="1.4142135623730951" /> -->
+  <xacro:property name="sqrt2" value="0.707" />
   <xacro:property name="rotor_drag_coefficient" value="8.06428e-05" />
   <xacro:property name="rolling_moment_coefficient" value="0.000001" />
 

@@ -27,9 +27,14 @@ static const Eigen::Vector2f kIDefaultXYController = Eigen::Vector2f(5.72958, -5
 
 static const Eigen::Vector2f kPDefaultAttitudeController = Eigen::Vector2f(0.0611, 0.0611);
 static const Eigen::Vector2f kIDefaultAttitudeController = Eigen::Vector2f(0.0349, 0.0349);
+static const Eigen::Vector2f kDDefaultAttitudeController = Eigen::Vector2f(0.0, 0.0);
+
+// static const Eigen::Vector2f kPDefaultAttitudeController = Eigen::Vector2f(1.1611, 1.1611);
+// static const Eigen::Vector2f kIDefaultAttitudeController = Eigen::Vector2f(0.1349, 0.1349);
 
 static const Eigen::Vector3f kPDefaultRateController = Eigen::Vector3f(1000, 1000, 1000);
 static const Eigen::Vector3f kIDefaultRateController = Eigen::Vector3f(0, 0, 95.6839);
+static const Eigen::Vector3f kDDefaultRateController = Eigen::Vector3f(0, 0, 0);
 
 static const double kPDefaultYawController = 0.0914;
 static const double kIDefaultYawController = 0;
@@ -48,8 +53,10 @@ namespace rotors_control {
 	        xy_gain_ki_(kIDefaultXYController),
           attitude_gain_kp_(kPDefaultAttitudeController),
           attitude_gain_ki_(kIDefaultAttitudeController),
+		  attitude_gain_kd_(kDDefaultAttitudeController),
           rate_gain_kp_(kPDefaultRateController),
           rate_gain_ki_(kIDefaultRateController),
+		  rate_gain_kd_(kDDefaultRateController),
           yaw_gain_kp_(kPDefaultYawController),
           yaw_gain_ki_(kIDefaultYawController),
           hovering_gain_kp_(kPDefaultHoveringController),
@@ -62,9 +69,13 @@ namespace rotors_control {
 	  
 	  Eigen::Vector2f attitude_gain_kp_;
 	  Eigen::Vector2f attitude_gain_ki_;
-	  
+	  Eigen::Vector2f attitude_gain_kd_;
+	  Eigen::Vector2f attitude_integration_limit_;
+
 	  Eigen::Vector3f rate_gain_kp_;
 	  Eigen::Vector3f rate_gain_ki_;
+	  Eigen::Vector3f rate_gain_kd_;
+	  Eigen::Vector3f rate_integration_limit_;
 	  
 	  double yaw_gain_kp_;
 	  double yaw_gain_ki_;

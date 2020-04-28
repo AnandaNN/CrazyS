@@ -53,14 +53,14 @@ void MsgCallback(const nav_msgs::Odometry odometry_msg)
     double roll, pitch, yaw;
     m.getRPY(roll, pitch, yaw);
 
-    double yaw_degrees = yaw * 180.0 / M_PI; // conversion to degrees
-    if( yaw_degrees < 0 ) yaw_degrees += 360.0; // convert negative to positive angles
+    double yaw_degrees = yaw;// * 180.0 / M_PI; // conversion to degrees
+    // if( yaw_degrees < 0 ) yaw_degrees += 360.0; // convert negative to positive angles
 
-    double roll_degrees = roll * 180.0 / M_PI; // conversion to degrees
-    if( roll_degrees < 0 ) roll_degrees += 360.0; // convert negative to positive angles
+    double roll_degrees = roll;// * 180.0 / M_PI; // conversion to degrees
+    // if( roll_degrees < 0 ) roll_degrees += 360.0; // convert negative to positive angles
 
-    double pitch_degrees = pitch * 180.0 / M_PI; // conversion to degrees
-    if( pitch_degrees < 0 ) pitch_degrees += 360.0; // convert negative to positive angles
+    double pitch_degrees = pitch;// * 180.0 / M_PI; // conversion to degrees
+    // if( pitch_degrees < 0 ) pitch_degrees += 360.0; // convert negative to positive angles
 
     // the found angles are written in a geometry_msgs::Vector3
     geometry_msgs::Vector3 rpy;

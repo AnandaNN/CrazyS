@@ -34,6 +34,16 @@ namespace rotors_control {
             void SetControllerGains(PositionControllerParameters& controller_parameters_);
             void RateController(double* delta_phi, double* delta_theta, double* delta_psi);
  
+            void Quaternion2Euler(double* roll, double* pitch, double* yaw) const;
+
+            double true_r = 0;
+            double true_p = 0;
+            double true_y = 0;
+
+            double true_ang_x = 0;
+            double true_ang_y = 0;
+            double true_ang_z = 0;
+
             EIGEN_MAKE_ALIGNED_OPERATOR_NEW
         private:
 
@@ -52,7 +62,7 @@ namespace rotors_control {
             Eigen::Vector2f attitude_gain_kp_private_, attitude_gain_ki_private_;
             Eigen::Vector3f rate_gain_kp_private_, rate_gain_ki_private_;
 
-            void Quaternion2Euler(double* roll, double* pitch, double* yaw) const;
+            
             void AttitudeController(double* p_command, double* q_command);
 
      };
